@@ -11,10 +11,7 @@ import threading
 from collections import deque, Counter
 from datetime import datetime
 
-import eventlet
-eventlet.monkey_patch()
-
-from flask import Flask, render_template, send_from_directory, jsonify
+import from flask import Flask, render_template, send_from_directory, jsonify
 from flask_socketio import SocketIO
 import websockets
 
