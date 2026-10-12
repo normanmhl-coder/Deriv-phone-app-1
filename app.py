@@ -181,12 +181,12 @@ def index():
 
 @app.route("/manifest.json")
 def manifest():
-    return send_from_directory("static", "manifest.json")
+    return send_from_directory("templetes/static", "manifest.json")
 
 
 @app.route("/sw.js")
 def sw():
-    return send_from_directory("static", "sw.js")
+    return send_from_directory("templates/static", "sw.js")
 
 
 @app.route("/health")
