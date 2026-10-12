@@ -147,10 +147,13 @@ async def deriv_stream():
     url = f"wss://ws.derivws.com/websockets/v3?app_id={APP_ID}"
     while True:
         try:
-            print(f"Connecting to Deriv ({SYMBOL})...")
-            async with websockets.connect(url, ping_interval=20) as ws:
+            print(f"[{datetime.now():%H:%M:%S}] Connecting to Deriv ({SYMBOL})...")
+            async with websockets.connect(
+                url, ping_interval=20, open_timeout=60, close_timeout=10
+            ) as ws:
+                print(f"[{datetime.now():%H:%M:%S}] WebSocket opened")
                 await ws.send(json.dumps({"ticks": SYMBOL, "subscribe": 1}))
-                print("Connected.")
+                print(f"[{datetime.now():%H:%M:%S}] Subscription sent. Waiting for ticks...")
                 async for msg in ws:
                     data = json.loads(msg)
                     if "tick" in data:
@@ -161,8 +164,9 @@ async def deriv_stream():
                         print(f"Deriv error: {data['error']['message']}")
                         break
         except Exception as e:
-            print(f"Connection lost: {e}. Reconnecting...")
-            await asyncio.sleep(3)
+            print(f"[{datetime.now():%H:%M:%S}] Connection error: {type(e).__name__}: {e}")
+            print("Retrying in 5 seconds...")
+            await asyncio.sleep(5)
 
 
 def start_background_loop():
