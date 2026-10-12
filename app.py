@@ -197,8 +197,11 @@ def on_connect():
     socketio.emit("update", engine.snapshot())
 
 
+# Start the Deriv WebSocket streaming thread at import time
+t = threading.Thread(target=start_background_loop, daemon=True)
+t.start()
+
+
 if __name__ == "__main__":
-    t = threading.Thread(target=start_background_loop, daemon=True)
-    t.start()
     port = int(os.environ.get("PORT", 5000))
     socketio.run(app, host="0.0.0.0", port=port, debug=False)
